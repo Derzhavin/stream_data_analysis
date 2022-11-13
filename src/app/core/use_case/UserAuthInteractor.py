@@ -3,7 +3,7 @@ from app.core.entity import User as UserModel
 from app.core.service import IUserAuthService
 
 
-class UserInteractor:
+class UserAuthInteractor:
 
     def __init__(self, user_repository: IUserRepository, user_auth_service: IUserAuthService):
         self.__user_repository = user_repository

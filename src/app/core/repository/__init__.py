@@ -1,1 +1,3 @@
 from .IUserRepository import IUserRepository
+from .IPostRepository import IPostRepository
+from .ICommentRepository import ICommentRepository

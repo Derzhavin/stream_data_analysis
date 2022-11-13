@@ -2,7 +2,12 @@ from fastapi import FastAPI
 
 from app.configs.environment import get_environment_variables
 from app.core.entity.Base import init_db
-from app.infra.controller.v1 import IndexRouter, UserRouter
+from app.infra.controller.v1 import (
+    IndexRouter,
+    UserRouter,
+    PostRouter,
+    CommentRouter
+)
 
 
 def create_app():
@@ -14,6 +19,8 @@ def create_app():
     )
     app.include_router(IndexRouter)
     app.include_router(UserRouter)
+    app.include_router(PostRouter)
+    app.include_router(CommentRouter)
 
     init_db()
 

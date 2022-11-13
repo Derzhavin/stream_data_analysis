@@ -1,4 +1,4 @@
-from app.core.use_case import UserInteractor
+from app.core.use_case import UserAuthInteractor
 
 from app.infra.viewmodel.input import (
     User as UserIn
@@ -20,7 +20,7 @@ UserRouter = APIRouter(prefix='/v1/users')
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user_repository = UserRepository(next(get_db_connection()))
     user_auth_service = UserAuthService()
-    user_interactor = UserInteractor(user_repository, user_auth_service)
+    user_interactor = UserAuthInteractor(user_repository, user_auth_service)
 
     request_model = {
         'username': form_data.username,
@@ -41,7 +41,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 async def get_current_user(token: str = Depends(OAuth2PasswordBearer(tokenUrl='/v1/users/login'))):
     user_repository = UserRepository(next(get_db_connection()))
     user_auth_service = UserAuthService()
-    user_interactor = UserInteractor(user_repository, user_auth_service)
+    user_interactor = UserAuthInteractor(user_repository, user_auth_service)
 
     request_model = {
         'access_token': token
@@ -55,14 +55,14 @@ async def get_current_user(token: str = Depends(OAuth2PasswordBearer(tokenUrl='/
             headers={"WWW-Authenticate": "Bearer"},
         )
     user = response_model['user']
-    return user
+    return user.username
 
 
 @UserRouter.post("/register", tags=['users'])
 async def register_user(user_in: UserIn):
     user_repository = UserRepository(next(get_db_connection()))
     user_auth_service = UserAuthService()
-    user_interactor = UserInteractor(user_repository, user_auth_service)
+    user_interactor = UserAuthInteractor(user_repository, user_auth_service)
 
     request_model = user_in.dict()
     response_model = user_interactor.register_user(**request_model)
