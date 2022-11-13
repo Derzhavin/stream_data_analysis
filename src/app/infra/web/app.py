@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
-from app.configs.environment import get_environment_variables
+from app.infra.web.configs.environment import get_environment_variables
 from app.core.entity.Base import init_db
-from app.infra.controller.v1 import (
+from app.infra.web.controller.v1 import (
     IndexRouter,
     UserRouter,
     PostRouter,
@@ -10,7 +10,7 @@ from app.infra.controller.v1 import (
 )
 
 
-def create_app():
+def create_web_app():
     env = get_environment_variables()
 
     app = FastAPI(
@@ -25,6 +25,3 @@ def create_app():
     init_db()
 
     return app
-
-
-app = create_app()

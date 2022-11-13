@@ -8,14 +8,22 @@ from app.core.entity import (
     User as UserModel,
     Comment as CommentModel
 )
+from app.core.service import ISentimentCommentEstimator
 
 
 class CommentPublicationInteractor:
 
-    def __init__(self, comment_repository: ICommentRepository, post_repository: IPostRepository, user_repository: IUserRepository):
+    def __init__(self,
+                 comment_repository: ICommentRepository,
+                 post_repository: IPostRepository,
+                 user_repository: IUserRepository,
+                 sentiment_comment_estimator: ISentimentCommentEstimator
+                 ):
+
         self.__comment_repository = comment_repository
         self.__post_repository = post_repository
         self.__user_repository = user_repository
+        self.__comment_sentiment_estimator = sentiment_comment_estimator
 
     def publish_comment(self, **kwargs) -> dict:
         username = kwargs.get('username')
@@ -35,8 +43,9 @@ class CommentPublicationInteractor:
             response_model['error'] = 'no such user'
             return response_model
 
-        comment = CommentModel(content=content, sentiment=10)
+        comment = CommentModel(content=content)
         self.__comment_repository.create_comment(comment=comment, post=post, user=user)
+        self.__comment_sentiment_estimator.estimate(comment)
 
         response_model['status'] = True
         return response_model

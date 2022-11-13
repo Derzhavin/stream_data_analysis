@@ -1,12 +1,12 @@
 from app.core.use_case import UserAuthInteractor
 
-from app.infra.viewmodel.input import (
+from app.infra.web.viewmodel.input import (
     User as UserIn
 )
-from app.infra.repository import UserRepository
-from app.infra.service import UserAuthService
+from app.infra.web.repository import UserRepository
+from app.infra.web.service import UserAuth
 
-from app.configs.database import (
+from app.infra.web.configs.database import (
     get_db_connection
 )
 
@@ -19,7 +19,7 @@ UserRouter = APIRouter(prefix='/v1/users')
 @UserRouter.post("/login", tags=['users'])
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user_repository = UserRepository(next(get_db_connection()))
-    user_auth_service = UserAuthService()
+    user_auth_service = UserAuth()
     user_interactor = UserAuthInteractor(user_repository, user_auth_service)
 
     request_model = {
@@ -40,7 +40,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 async def get_current_user(token: str = Depends(OAuth2PasswordBearer(tokenUrl='/v1/users/login'))):
     user_repository = UserRepository(next(get_db_connection()))
-    user_auth_service = UserAuthService()
+    user_auth_service = UserAuth()
     user_interactor = UserAuthInteractor(user_repository, user_auth_service)
 
     request_model = {
@@ -61,7 +61,7 @@ async def get_current_user(token: str = Depends(OAuth2PasswordBearer(tokenUrl='/
 @UserRouter.post("/register", tags=['users'])
 async def register_user(user_in: UserIn):
     user_repository = UserRepository(next(get_db_connection()))
-    user_auth_service = UserAuthService()
+    user_auth_service = UserAuth()
     user_interactor = UserAuthInteractor(user_repository, user_auth_service)
 
     request_model = user_in.dict()

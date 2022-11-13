@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class IUserAuthService(ABC):
+class IUserAuth(ABC):
 
     def __init__(self):
         pass

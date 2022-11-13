@@ -1,0 +1,2 @@
+#!/bin/bash
+celery -A main.background_app worker -l info

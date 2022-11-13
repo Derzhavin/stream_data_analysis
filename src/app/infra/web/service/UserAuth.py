@@ -1,12 +1,12 @@
-from app.core.service import IUserAuthService
-from app.configs import security as security_config
+from app.core.service import IUserAuth
+from app.infra.web.configs import security as security_config
 
 import datetime
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 
 
-class UserAuthService(IUserAuthService):
+class UserAuth(IUserAuth):
     __pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     def generate_hashed_password(self, username: str, password: str) -> str:

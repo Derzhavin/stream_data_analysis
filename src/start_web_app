@@ -1,0 +1,2 @@
+#!/bin/bash
+circusd web_server.ini

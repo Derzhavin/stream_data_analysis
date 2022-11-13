@@ -1,8 +1,5 @@
-import uvicorn
+from app.infra.web import create_web_app
+from app.infra.background import create_background_app
 
-if __name__ == '__main__':
-    uvicorn.run("app.app:app",
-                host="0.0.0.0",
-                port=5000,
-                reload=True
-    )
+web_app = create_web_app()
+background_app = create_background_app()

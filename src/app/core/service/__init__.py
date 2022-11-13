@@ -1,1 +1,2 @@
-from .IUserAuthService import IUserAuthService
+from .IUserAuth import IUserAuth
+from .ICommentSentimentEstimator import ISentimentCommentEstimator

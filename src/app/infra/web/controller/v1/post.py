@@ -1,8 +1,8 @@
 from app.core.use_case import PostPublicationInteractor
-from app.infra.repository import PostRepository, UserRepository
-from app.infra.viewmodel.input import Post as PostIn
-from app.infra.controller.v1.user import get_current_user
-from app.configs.database import (
+from app.infra.web.repository import PostRepository, UserRepository
+from app.infra.web.viewmodel.input import Post as PostIn
+from app.infra.web.controller.v1.user import get_current_user
+from app.infra.web.configs.database import (
     get_db_connection
 )
 

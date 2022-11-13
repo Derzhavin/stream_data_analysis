@@ -15,7 +15,7 @@ class Comment(EntityMeta):
 
     id = Column(Integer)
     content = Column(String(1000), nullable=False)
-    sentiment = Column(Integer, nullable=False)
+    sentiment = Column(Integer, nullable=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
 

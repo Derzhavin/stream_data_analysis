@@ -1,11 +1,11 @@
 from app.core.repository import IUserRepository
 from app.core.entity import User as UserModel
-from app.core.service import IUserAuthService
+from app.core.service import IUserAuth
 
 
 class UserAuthInteractor:
 
-    def __init__(self, user_repository: IUserRepository, user_auth_service: IUserAuthService):
+    def __init__(self, user_repository: IUserRepository, user_auth_service: IUserAuth):
         self.__user_repository = user_repository
         self.__user_auth_service = user_auth_service
 
