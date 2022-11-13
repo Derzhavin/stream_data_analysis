@@ -32,7 +32,7 @@ class BaseConfig:
     DB_MIN_CONN = 1
     DB_MAX_CONN = 1
 
-    NN_SENTIMENT_ESTIMATION_MODEL_PATH = '/home/denis/stream_data_analysis/src/sentiment_estimation1.pt'
+    NN_SENTIMENT_ESTIMATION_MODEL_PATH = '/home/denis/stream_data_analysis/src/sentiment_estimation.pt'
 
 
 class DevelopmentConfig(BaseConfig):
