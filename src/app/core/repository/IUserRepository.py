@@ -9,13 +9,9 @@ class IUserRepository(ABC):
         pass
 
     @abstractmethod
-    def create_user(self, user: UserModel):
+    def create_user(self, user: UserModel) -> bool:
         pass
 
     @abstractmethod
     def get_user_by_username(self, username: str):
-        pass
-
-    @abstractmethod
-    def is_username_exists(self, username: str):
         pass

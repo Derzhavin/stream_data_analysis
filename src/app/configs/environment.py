@@ -4,10 +4,10 @@ from pydantic import BaseSettings
 
 class EnvironmentSettings(BaseSettings):
     API_VERSION: str = 1
-    APP_NAME: str = 'stream-analysis'
+    APP_NAME: str = 'stream_analysis'
     DATABASE_DIALECT: str = 'postgresql'
     DATABASE_HOSTNAME: str = '0.0.0.0'
-    DATABASE_NAME: str = 'stream-analysis'
+    DATABASE_NAME: str = 'stream_analysis'
     DATABASE_PASSWORD: str = 'password'
     DATABASE_PORT: int = 5432
     DATABASE_USERNAME: str = 'admin'

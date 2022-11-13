@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.configs.Environment import get_environment_variables
+from app.configs.environment import get_environment_variables
 from app.core.entity.Base import init_db
 from app.infra.controller.v1 import IndexRouter, UserRouter
 

@@ -14,12 +14,12 @@ class UserInteractor:
         plain_password = kwargs.get('password')
         response_model = {'status': False}
 
-        if self.__user_repository.is_username_exists(username):
-            return response_model
-
         hashed_password = self.__user_auth_service.generate_hashed_password(username, plain_password)
         user = UserModel(username=username, hashed_password=hashed_password)
-        self.__user_repository.create_user(user)
+
+        if not self.__user_repository.create_user(user):
+            response_model['error'] = 'user exists'
+            return response_model
 
         response_model['status'] = True
         return response_model
@@ -45,6 +45,7 @@ class UserInteractor:
 
         response_model.update(auth_data)
         response_model['user'] = user
+        response_model['status'] = True
         return response_model
 
     def authenticate_user(self, **kwargs) -> dict:
@@ -58,5 +59,5 @@ class UserInteractor:
         user = self.__user_repository.get_user_by_username(username)
 
         response_model['user'] = user
-
+        response_model['status'] = True
         return response_model

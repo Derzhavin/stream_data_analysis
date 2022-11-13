@@ -17,9 +17,10 @@ class UserAuthService(IUserAuthService):
 
     def generate_auth_data(self, **input_data) -> dict:
         auth_data = input_data.copy()
-        auth_data["expiration"] = datetime.datetime.utcnow() + datetime.timedelta(
+        auth_data["exp"] = datetime.datetime.utcnow() + datetime.timedelta(
             minutes=security_config.ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = jwt.encode(auth_data, security_config.SECRET_KEY, algorithm=security_config.ALGORITHM)
+        access_token = jwt.encode(claims=auth_data, key=security_config.SECRET_KEY,
+                                  algorithm=security_config.ALGORITHM)
         auth_data['access_token'] = access_token
 
         return auth_data

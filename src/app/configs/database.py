@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from .Environment import get_environment_variables
+from .environment import get_environment_variables
 
 # Runtime Environment Configuration
 env = get_environment_variables()

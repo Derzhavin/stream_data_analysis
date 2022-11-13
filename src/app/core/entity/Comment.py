@@ -5,7 +5,8 @@ from sqlalchemy import (
     Integer,
     PrimaryKeyConstraint,
     String,
-    ForeignKey
+    ForeignKey,
+    CheckConstraint
 )
 
 
@@ -14,7 +15,9 @@ class Comment(EntityMeta):
 
     id = Column(Integer)
     content = Column(String(1000), nullable=False)
+    sentiment = Column(Integer, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
 
+    CheckConstraint("0 < sentiment < 11", name="sentiment_range_check")
     PrimaryKeyConstraint(id)

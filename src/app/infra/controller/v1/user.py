@@ -6,7 +6,7 @@ from app.infra.viewmodel.input import (
 from app.infra.repository import UserRepository
 from app.infra.service import UserAuthService
 
-from app.configs.Database import (
+from app.configs.database import (
     get_db_connection
 )
 
@@ -18,7 +18,7 @@ UserRouter = APIRouter(prefix='/v1/users')
 
 @UserRouter.post("/login", tags=['users'])
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user_repository = UserRepository(get_db_connection())
+    user_repository = UserRepository(next(get_db_connection()))
     user_auth_service = UserAuthService()
     user_interactor = UserInteractor(user_repository, user_auth_service)
 
@@ -39,7 +39,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 async def get_current_user(token: str = Depends(OAuth2PasswordBearer(tokenUrl='/v1/users/login'))):
-    user_repository = UserRepository(get_db_connection())
+    user_repository = UserRepository(next(get_db_connection()))
     user_auth_service = UserAuthService()
     user_interactor = UserInteractor(user_repository, user_auth_service)
 
@@ -60,12 +60,12 @@ async def get_current_user(token: str = Depends(OAuth2PasswordBearer(tokenUrl='/
 
 @UserRouter.post("/register", tags=['users'])
 async def register_user(user_in: UserIn):
-    user_repository = UserRepository(get_db_connection())
+    user_repository = UserRepository(next(get_db_connection()))
     user_auth_service = UserAuthService()
     user_interactor = UserInteractor(user_repository, user_auth_service)
 
     request_model = user_in.dict()
-    response_model = user_interactor.register_user(request_model)
+    response_model = user_interactor.register_user(**request_model)
 
     if not response_model['status']:
         return status.HTTP_409_CONFLICT
