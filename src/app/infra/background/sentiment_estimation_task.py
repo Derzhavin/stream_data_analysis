@@ -5,6 +5,7 @@ from celery_batches import Batches, SimpleRequest
 from typing import List, Tuple
 import math
 from celery import shared_task
+from contextlib import closing
 import psycopg2
 
 
@@ -31,10 +32,11 @@ class SentimentEstimationTask(Batches):
         return self.run(*args, **kwargs)
 
 
-@shared_task(ignore_result=False,
+@shared_task(ignore_result=True,
           bind=True,
           flush_every=10,
           flush_interval=0.1,
+          max_retries=0,
           base=SentimentEstimationTask,
           path=('app.infra.background.sentiment_estimation', 'SentimentEstimator'),
           name=f'{__name__}, SentimentEstimator')
@@ -50,20 +52,21 @@ def estimate_sentiment_batch(self, simple_request: SimpleRequest):
 
     ids_sentiments = [(comment_id, prediction) for comment_id, prediction in  zip(comment_ids, int_predictions)]
 
-    db_pool = current_celery_app.db_pool
     try:
-        conn = db_pool.getconn()
+        with closing(psycopg2.connect(
+                dbname=celery_settings.DB_NAME,
+                user=celery_settings.DB_USER,
+                password=celery_settings.DB_PASSWORD,
+                host=celery_settings.DB_HOST
+        )) as conn:
+            sql_expr = """UPDATE comments as T
+                          SET sentiment = S.sentiment
+                          FROM (VALUES %s) AS S(id, sentiment)
+                          WHERE S.id = T.id"""
 
-        sql_expr = """UPDATE comments as T
-                      SET sentiment = S.sentiment
-                      FROM (VALUES %s) AS S(id, sentiment)
-                      WHERE S.id = T.id"""
-
-        cursor = conn.cursor()
-        cursor.execute(sql_expr, ids_sentiments)
-        cursor.close()
-        conn.commit()
+            cursor = conn.cursor()
+            cursor.execute(sql_expr, ids_sentiments)
+            cursor.close()
+            conn.commit()
     except Exception as e:
-        print('Failed to update comments table')
-    finally:
-        db_pool.putconn(conn)
+            print('Failed to update comments: ', e)

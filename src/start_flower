@@ -1,0 +1,1 @@
+celery -A main.background_app flower --port=5001
