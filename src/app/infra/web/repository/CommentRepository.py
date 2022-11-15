@@ -26,6 +26,6 @@ class CommentRepository(ICommentRepository):
             post.comments.append(comment)
             user.comments.append(comment)
             self.db.commit()
-        except:
+        except Exception as ex:
             return False
         return True

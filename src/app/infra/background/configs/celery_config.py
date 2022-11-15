@@ -11,7 +11,7 @@ def route_task(name):
 
 
 class BaseConfig:
-    CELERY_BROKER_URL: str = os.environ.get("CELERY_BROKER_URL", "amqp://guest:guest@localhost:5672//")
+    CELERY_BROKER_URL: str = os.environ.get("CELERY_BROKER_URL", "amqp://guest:guest@0.0.0.0:5672//")
     result_backend: str = os.environ.get("CELERY_RESULT_BACKEND", "rpc://")
 
     CELERY_TASK_QUEUES: list = (
@@ -25,7 +25,7 @@ class BaseConfig:
     ]
     worker_concurrency = 1
     worker_max_tasks_per_child = 1000
-
+    worker_prefetch_multiplier = 100
     DB_USER: str = 'admin'
     DB_PASSWORD = 'password'
     DB_HOST = "0.0.0.0"

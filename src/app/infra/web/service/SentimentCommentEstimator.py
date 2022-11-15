@@ -8,5 +8,4 @@ class SentimentCommentEstimator(ISentimentCommentEstimator):
     def estimate(self, comment: CommentModel):
         id = comment.id
         content = comment.content
-        task = estimate_sentiment_batch.apply_async(args=[[(id, content)]])
-        print(task.id)
+        estimate_sentiment_batch.apply_async(args=[(id, content)])

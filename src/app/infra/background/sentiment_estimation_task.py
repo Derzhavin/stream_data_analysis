@@ -34,17 +34,16 @@ class SentimentEstimationTask(Batches):
 
 @shared_task(ignore_result=True,
           bind=True,
-          flush_every=10,
-          flush_interval=0.1,
+          flush_every=100,
+          flush_interval=5,
           max_retries=0,
           base=SentimentEstimationTask,
           path=('app.infra.background.sentiment_estimation', 'SentimentEstimator'),
           name=f'{__name__}, SentimentEstimator')
-def estimate_sentiment_batch(self, simple_request: SimpleRequest):
-    """
-    Essentially the run method of PredictTask
-    """
-    comments: List[Tuple[int, str]] = simple_request[0].args[0]
+def estimate_sentiment_batch(self, simple_request: List[SimpleRequest]):
+    comments = []
+    for portion in simple_request:
+        comments.extend(portion.args)
 
     comment_ids, contents = zip(*comments)
     float_predictions = self.estimator.predict(contents)
@@ -61,11 +60,11 @@ def estimate_sentiment_batch(self, simple_request: SimpleRequest):
         )) as conn:
             sql_expr = """UPDATE comments as T
                           SET sentiment = S.sentiment
-                          FROM (VALUES %s) AS S(id, sentiment)
+                          FROM (VALUES (%s,%s)) AS S(id, sentiment)
                           WHERE S.id = T.id"""
 
             cursor = conn.cursor()
-            cursor.execute(sql_expr, ids_sentiments)
+            cursor.executemany(sql_expr, ids_sentiments)
             cursor.close()
             conn.commit()
     except Exception as e:

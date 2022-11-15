@@ -12,7 +12,7 @@ class EnvironmentSettings(BaseSettings):
     DATABASE_PORT: int = 5432
     DATABASE_USERNAME: str = 'admin'
 
-    DEBUG_MODE: bool = True
+    DEBUG_MODE: bool = False
 
     class Config:
         env_file = ".env"
