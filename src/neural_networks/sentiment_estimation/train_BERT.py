@@ -6,7 +6,6 @@ from torchtext.legacy import data
 import random
 import numpy as np
 from torchtext.legacy import datasets
-from transformers import BertTokenizer
 from transformers import BertTokenizer, BertModel
 from BERT import BERTGRUSentiment
 
@@ -70,21 +69,20 @@ TEXT = data.Field(batch_first=True,
 LABEL = data.LabelField(dtype=torch.float)
 
 
-train_data, test_data = datasets.IMDB.splits(TEXT, LABEL)
+train_data, _ = datasets.IMDB.splits(TEXT, LABEL)
 
 train_data, valid_data = train_data.split(random_state=random.seed(SEED))
 
 print(f"Number of training examples: {len(train_data)}")
 print(f"Number of validation examples: {len(valid_data)}")
-print(f"Number of testing examples: {len(test_data)}")
 
 
 tokens = tokenizer.convert_ids_to_tokens(vars(train_data.examples[6])['text'])
 
 LABEL.build_vocab(train_data)
 
-train_iterator, valid_iterator, test_iterator = data.BucketIterator.splits(
-    (train_data, valid_data, test_data),
+train_iterator, valid_iterator = data.BucketIterator.splits(
+    (train_data, valid_data),
     batch_size=BATCH_SIZE,
     device=device)
 
@@ -204,10 +202,3 @@ for epoch in range(N_EPOCHS):
     print(f'Epoch: {epoch + 1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
     print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc * 100:.2f}%')
     print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc * 100:.2f}%')
-
-
-model.load_state_dict(torch.load('tut6-model.pt'))
-
-test_loss, test_acc = evaluate(model, test_iterator, criterion)
-
-print(f'Test Loss: {test_loss:.3f} | Test Acc: {test_acc * 100:.2f}%')
