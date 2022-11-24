@@ -32,7 +32,9 @@ class BaseConfig:
     DB_PORT = '5432'
     DB_NAME = 'stream_analysis'
 
-    NN_SENTIMENT_ESTIMATION_MODEL_PATH = '/home/denis/stream_data_analysis/src/sentiment_estimation.pt'
+    NN_SENTIMENT_ESTIMATION_MODEL_PATH = f'{os.path.dirname(__file__)}/../../../../neural_networks/sentiment_estimation/sentiment_estimation_BERT.pt'
+    NN_SENTIMENT_ESTIMATION_MODULE_PATH = f'{os.path.dirname(__file__)}/../../../../neural_networks/sentiment_estimation/BERT/SentimentEstimator.py'
+    NN_SENTIMENT_ESTIMATION_CLASS = 'SentimentEstimator'
 
 
 class DevelopmentConfig(BaseConfig):

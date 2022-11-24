@@ -1,4 +1,4 @@
-from app.infra.background.sentiment_estimation.BERTGRUSentiment import BERTGRUSentiment
+from BERT.BERTGRUSentiment import BERTGRUSentiment
 
 import torch
 from transformers import BertTokenizer, BertModel
@@ -53,19 +53,5 @@ class SentimentEstimator:
             prediction = [prediction]
 
         return prediction
-
-
-if __name__ == '__main__':
-    sentences = [
-        "This film is terrible",
-        "This film is great",
-    ] * 1024
-
-    p = SentimentEstimator(model_path='/home/denis/stream_data_analysis/src/sentiment_estimation1.pt')
-
-    results = p.predict(sentences)
-
-    for i in range(len(sentences)):
-        print(sentences[i], results[i])
 
 

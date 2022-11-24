@@ -1,5 +1,8 @@
+import importlib.util
+import os
+
 from app.infra.background.configs.celery_config import settings as celery_settings
-from app.infra.background.sentiment_estimation import BERTGRUSentiment, SentimentEstimator
+# from app.infra.background.sentiment_estimation import BERTGRUSentiment, SentimentEstimator
 from celery import current_app as current_celery_app
 from celery_batches import Batches, SimpleRequest
 from typing import List, Tuple
@@ -25,10 +28,15 @@ class SentimentEstimationTask(Batches):
         Avoids the need to load model on each task request
         """
         if not self.estimator:
-            if not self.estimator:
-                self.estimator = SentimentEstimator(
-                    model_path=celery_settings.NN_SENTIMENT_ESTIMATION_MODEL_PATH
-                )
+            # self.estimator = SentimentEstimator(
+            #     model_path=celery_settings.NN_SENTIMENT_ESTIMATION_MODEL_PATH
+            # )
+            spec = importlib.util.spec_from_file_location(self.path[0], self.path[1])
+            module_import = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module_import)
+
+            model_obj = getattr(module_import, self.path[0])
+            self.estimator = model_obj(model_path=celery_settings.NN_SENTIMENT_ESTIMATION_MODEL_PATH)
         return self.run(*args, **kwargs)
 
 
@@ -38,8 +46,8 @@ class SentimentEstimationTask(Batches):
           flush_interval=5,
           max_retries=0,
           base=SentimentEstimationTask,
-          path=('app.infra.background.sentiment_estimation', 'SentimentEstimator'),
-          name=f'{__name__}, SentimentEstimator')
+          path=(celery_settings.NN_SENTIMENT_ESTIMATION_CLASS, celery_settings.NN_SENTIMENT_ESTIMATION_MODULE_PATH),
+          name=f'{__name__}, {celery_settings.NN_SENTIMENT_ESTIMATION_CLASS}')
 def estimate_sentiment_batch(self, simple_request: List[SimpleRequest]):
     comments = []
     for portion in simple_request:
