@@ -39,12 +39,13 @@ class SentimentEstimator:
         self.__unk_token_idx = self.__tokenizer.convert_tokens_to_ids(unk_token)
 
     def predict(self, sentences: List[str]) -> List[float]:
-        indexed_sentences = []
-        for sent in sentences:
-            tokens = self.__tokenizer.tokenize(sent)
-            tokens = tokens[:self.__max_input_length - 2]
-            indexed = [self.__init_token_idx] + self.__tokenizer.convert_tokens_to_ids(tokens) + [self.__eos_token_idx]
-            indexed_sentences += [indexed]
+        indexed_sentences = self.__tokenizer.batch_encode_plus(
+            sentences,
+            max_length=self.__max_input_length,
+            padding='longest',
+            truncation=True,
+            return_token_type_ids=False
+        )['input_ids']
 
         tensor = torch.stack([torch.LongTensor(indexed) for indexed in indexed_sentences]).to(self.__device)
         prediction= torch.sigmoid(self.__model(tensor).squeeze()).tolist()
