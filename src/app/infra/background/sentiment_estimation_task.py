@@ -47,7 +47,7 @@ class SentimentEstimationTask(Batches):
           max_retries=0,
           base=SentimentEstimationTask,
           path=(celery_settings.NN_SENTIMENT_ESTIMATION_CLASS, celery_settings.NN_SENTIMENT_ESTIMATION_MODULE_PATH),
-          name=f'{__name__}, {celery_settings.NN_SENTIMENT_ESTIMATION_CLASS}')
+          name='sentiment_estimation')
 def estimate_sentiment_batch(self, simple_request: List[SimpleRequest]):
     comments = []
     for portion in simple_request:

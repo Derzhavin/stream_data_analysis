@@ -9,7 +9,7 @@ USERNAME = "denis"
 PASSWORD = "denis"
 POST_ID = 1
 COMMENTS_TIME_PERIOD_SEC = 0.0
-PUBLISHERS_NUM = 32
+PUBLISHERS_NUM = 6
 CONTENT = "Throughout the rest of its running time, “Black Adam” leans into the inevitability of Adam’s evolution toward good-guy status, condensing the transformation of the title character in the first two “Terminator” films (there are even comic bits where people try to teach Adam sarcasm and the Geneva Conventions). \"Black Adam\" then stirs in dollops of a macho sentimentality that used to be common in old Hollywood dramas about loners who needed to get involved in a cause in order to reset their moral compasses or recognize their own worth. But the sharp edge that the film brings to the early parts of its story never dulls."
 
 def task():

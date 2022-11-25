@@ -19,7 +19,8 @@ class BaseConfig:
         Queue("comments"),
     )
 
-    CELERY_TASK_ROUTES = ()
+    task_routes = {'sentiment_estimation': {'queue': 'comments'}}
+
     include = [
         'app.infra.background.sentiment_estimation_task'
     ]

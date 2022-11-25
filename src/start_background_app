@@ -1,2 +1,2 @@
 #!/bin/bash
-celery -A main.background_app worker -l debug 
+celery -A main.background_app worker -l debug -Q comments,celery
